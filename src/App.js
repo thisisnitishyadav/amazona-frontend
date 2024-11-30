@@ -63,7 +63,6 @@ function App() {
         if (Array.isArray(data)) {
           setCategories(data);
         } else {
-          console.error('Invalid response:', data);
           throw new Error('Invalid response format');
         }
       } catch (err) {
@@ -228,7 +227,10 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/shipping" element={<ShippingAddressScreen />} />
+              <Route
+                path="/shipping"
+                element={<ShippingAddressScreen />}
+              />
               <Route path="/payment" element={<PaymentMethodScreen />} />
               <Route
                 path="/admin/dashboard"
