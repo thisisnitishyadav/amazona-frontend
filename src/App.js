@@ -55,18 +55,19 @@ function App() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await axios.get(`/api/products/categories`);
-        
+        const { data } = await axios.get('/api/products/categories', {
+          headers: {
+            Accept: 'application/json',
+          },
+        });
         if (Array.isArray(data)) {
           setCategories(data);
         } else {
-          console.error("Invalid response format: Expected an array, got:", data);
-          setCategories([]); // Fallback to an empty array
+          throw new Error('Invalid response format');
         }
       } catch (err) {
-        console.error("Error fetching categories:", err.message);
+        console.error('Error fetching categories:', err.message);
         toast.error(getError(err));
-        setCategories([]); // Default to empty categories on error
       }
     };
     fetchCategories();
