@@ -56,15 +56,17 @@ function App() {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(`/api/products/categories`);
+        
         if (Array.isArray(data)) {
           setCategories(data);
         } else {
-          console.error("Expected an array for categories, got:", data);
-          setCategories([]);
+          console.error("Invalid response format: Expected an array, got:", data);
+          setCategories([]); // Fallback to an empty array
         }
       } catch (err) {
+        console.error("Error fetching categories:", err.message);
         toast.error(getError(err));
-        setCategories([]); // Default to empty if an error occurs
+        setCategories([]); // Default to empty categories on error
       }
     };
     fetchCategories();
