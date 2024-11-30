@@ -48,6 +48,7 @@ function App() {
     localStorage.removeItem('paymentMethod');
     window.location.href = '/signin';
   };
+
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
 
@@ -55,13 +56,20 @@ function App() {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(`/api/products/categories`);
-        setCategories(data);
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          console.error("Expected an array for categories, got:", data);
+          setCategories([]);
+        }
       } catch (err) {
         toast.error(getError(err));
+        setCategories([]); // Default to empty if an error occurs
       }
     };
     fetchCategories();
   }, []);
+
   return (
     <BrowserRouter>
       <div
@@ -92,7 +100,7 @@ function App() {
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <SearchBox />
-                <Nav className="me-auto  w-100  justify-content-end">
+                <Nav className="me-auto w-100 justify-content-end">
                   <Link to="/cart" className="nav-link">
                     Cart
                     {cart.cartItems.length > 0 && (
@@ -183,7 +191,6 @@ function App() {
                 path="/reset-password/:token"
                 element={<ResetPasswordScreen />}
               />
-
               <Route
                 path="/profile"
                 element={
@@ -208,7 +215,7 @@ function App() {
                     <OrderScreen />
                   </ProtectedRoute>
                 }
-              ></Route>
+              />
               <Route
                 path="/orderhistory"
                 element={
@@ -216,13 +223,12 @@ function App() {
                     <OrderHistoryScreen />
                   </ProtectedRoute>
                 }
-              ></Route>
+              />
               <Route
                 path="/shipping"
                 element={<ShippingAddressScreen />}
-              ></Route>
-              <Route path="/payment" element={<PaymentMethodScreen />}></Route>
-              {/* Admin Routes */}
+              />
+              <Route path="/payment" element={<PaymentMethodScreen />} />
               <Route
                 path="/admin/dashboard"
                 element={
@@ -230,7 +236,7 @@ function App() {
                     <DashboardScreen />
                   </AdminRoute>
                 }
-              ></Route>
+              />
               <Route
                 path="/admin/orders"
                 element={
@@ -238,7 +244,7 @@ function App() {
                     <OrderListScreen />
                   </AdminRoute>
                 }
-              ></Route>
+              />
               <Route
                 path="/admin/users"
                 element={
@@ -246,7 +252,7 @@ function App() {
                     <UserListScreen />
                   </AdminRoute>
                 }
-              ></Route>
+              />
               <Route
                 path="/admin/products"
                 element={
@@ -254,7 +260,7 @@ function App() {
                     <ProductListScreen />
                   </AdminRoute>
                 }
-              ></Route>
+              />
               <Route
                 path="/admin/product/:id"
                 element={
@@ -262,7 +268,7 @@ function App() {
                     <ProductEditScreen />
                   </AdminRoute>
                 }
-              ></Route>
+              />
               <Route
                 path="/admin/user/:id"
                 element={
@@ -270,8 +276,7 @@ function App() {
                     <UserEditScreen />
                   </AdminRoute>
                 }
-              ></Route>
-
+              />
               <Route path="/" element={<HomeScreen />} />
             </Routes>
           </Container>
