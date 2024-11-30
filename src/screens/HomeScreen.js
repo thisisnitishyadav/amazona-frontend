@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -6,7 +6,6 @@ import Product from "../components/Product";
 import { Helmet } from "react-helmet-async";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-// import data from '../data';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -27,21 +26,26 @@ function HomeScreen() {
     loading: true,
     error: "",
   });
-  // const [products, setProducts] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: "FETCH_REQUEST" });
       try {
-        const result = await axios.get("/api/products");
-        dispatch({ type: "FETCH_SUCCESS", payload: result.data });
+        const { data } = await axios.get("/api/products");
+
+        // Ensure data is an array before setting it to state
+        if (Array.isArray(data)) {
+          dispatch({ type: "FETCH_SUCCESS", payload: data });
+        } else {
+          throw new Error("Invalid data format: expected an array");
+        }
       } catch (err) {
         dispatch({ type: "FETCH_FAIL", payload: err.message });
       }
-
-      // setProducts(result.data);
     };
     fetchData();
   }, []);
+
   return (
     <div>
       <Helmet>
@@ -66,4 +70,5 @@ function HomeScreen() {
     </div>
   );
 }
+
 export default HomeScreen;
