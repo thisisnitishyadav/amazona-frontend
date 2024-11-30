@@ -1,10 +1,16 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
+import Navbar from 'react-bootstrap/Navbar';
+import Badge from 'react-bootstrap/Badge';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Container from 'react-bootstrap/Container';
+import { LinkContainer } from 'react-router-bootstrap';
+import { useContext, useEffect, useState } from 'react';
+import { Store } from './Store';
 import CartScreen from './screens/CartScreen';
 import SigninScreen from './screens/SigninScreen';
 import ShippingAddressScreen from './screens/ShippingAddressScreen';
@@ -14,34 +20,26 @@ import PlaceOrderScreen from './screens/PlaceOrderScreen';
 import OrderScreen from './screens/OrderScreen';
 import OrderHistoryScreen from './screens/OrderHistoryScreen';
 import ProfileScreen from './screens/ProfileScreen';
-import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
-import ResetPasswordScreen from './screens/ResetPasswordScreen';
+import Button from 'react-bootstrap/Button';
+import { getError } from './utils';
+import axios from 'axios';
+import SearchBox from './components/SearchBox';
+import SearchScreen from './screens/SearchScreen';
 import ProtectedRoute from './components/ProtectedRoute';
-import AdminRoute from './components/AdminRoute';
 import DashboardScreen from './screens/DashboardScreen';
+import AdminRoute from './components/AdminRoute';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import UserListScreen from './screens/UserListScreen';
 import UserEditScreen from './screens/UserEditScreen';
 import MapScreen from './screens/MapScreen';
-import Navbar from 'react-bootstrap/Navbar';
-import Badge from 'react-bootstrap/Badge';
-import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
-import { LinkContainer } from 'react-router-bootstrap';
-import SearchBox from './components/SearchBox';
-import { Store } from './Store';
-import { getError } from './utils';
+import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
+import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { fullBox, cart, userInfo } = state;
-
-  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
 
   const signoutHandler = () => {
     ctxDispatch({ type: 'USER_SIGNOUT' });
@@ -51,11 +49,16 @@ function App() {
     window.location.href = '/signin';
   };
 
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get('/api/products/categories', {
-          headers: { Accept: 'application/json' },
+          headers: {
+            Accept: 'application/json',
+          },
         });
         if (Array.isArray(data)) {
           setCategories(data);
@@ -65,7 +68,6 @@ function App() {
       } catch (err) {
         console.error('Error fetching categories:', err.message);
         toast.error(getError(err));
-        setCategories([]); // Fallback to empty
       }
     };
     fetchCategories();
@@ -88,9 +90,13 @@ function App() {
         <header>
           <Navbar bg="dark" variant="dark" expand="lg">
             <Container>
-              <Button variant="dark" onClick={() => setSidebarIsOpen(!sidebarIsOpen)}>
+              <Button
+                variant="dark"
+                onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
+              >
                 <i className="fas fa-bars"></i>
               </Button>
+
               <LinkContainer to="/">
                 <Navbar.Brand>amazona</Navbar.Brand>
               </LinkContainer>
@@ -180,8 +186,14 @@ function App() {
               <Route path="/search" element={<SearchScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
               <Route path="/signup" element={<SignupScreen />} />
-              <Route path="/forget-password" element={<ForgetPasswordScreen />} />
-              <Route path="/reset-password/:token" element={<ResetPasswordScreen />} />
+              <Route
+                path="/forget-password"
+                element={<ForgetPasswordScreen />}
+              />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPasswordScreen />}
+              />
               <Route
                 path="/profile"
                 element={
@@ -215,7 +227,10 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/shipping" element={<ShippingAddressScreen />} />
+              <Route
+                path="/shipping"
+                element={<ShippingAddressScreen />}
+              />
               <Route path="/payment" element={<PaymentMethodScreen />} />
               <Route
                 path="/admin/dashboard"
