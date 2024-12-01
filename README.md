@@ -1,8 +1,9 @@
-# Getting Started with Create React App
+# Getting Started with Amazona App : User Flow Diagram
 
-## Available Scripts
-
-In the project directory, you can run:
+## SETUP INSTRUCTIONS
+- git clone https://github.com/thisisnitishyadav/amazona-frontend
+- npm install
+- npm start
 
 ### `npm start`
 
