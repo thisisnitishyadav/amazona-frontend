@@ -1,9 +1,9 @@
 # Getting Started with Amazona App : User Flow Diagram
 
 ## SETUP INSTRUCTIONS
-- git clone https://github.com/thisisnitishyadav/amazona-frontend
-- npm install
-- npm start
+- `git clone https://github.com/thisisnitishyadav/amazona-frontend`
+- `npm install`
+- `npm start`
 
 ### `npm start`
 
